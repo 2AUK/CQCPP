@@ -100,7 +100,29 @@ void Atom::populate_basis(std::string in_basis)
             basisfunctions.push_back(BasisFunction(std::make_tuple(0,1,1), coord, expTemp, coefTemp));
             basisfunctions.push_back(BasisFunction(std::make_tuple(0,0,2), coord, expTemp, coefTemp));
             std::advance(it, primNum);
-        } else {
+        } else if (tokens[0] == "F"){
+            primNum = std::stoi(tokens[1]);
+            expTemp = Eigen::ArrayXf::Zero(primNum);
+            coefTemp = Eigen::ArrayXf::Zero(primNum);
+            for (int i = 1; i <= primNum; i++){
+                auto nx = std::next(it, i);
+                std::vector<std::string> toks = split(*nx, ' ');
+                expTemp[i-1] = std::stof(toks[0]);
+                coefTemp[i-1] = std::stof(toks[1]);
+            }
+            basisfunctions.push_back(BasisFunction(std::make_tuple(3,0,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(2,1,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(2,0,1), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(1,2,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(1,1,1), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(1,0,2), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,3,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,2,1), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,1,2), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,0,3), coord, expTemp, coefTemp));
+            std::advance(it, primNum);
+
+       } else {
             std::cout << "Fatal Error: Could not read basis-set for current atom OR Orbital not implemented!\n";
         }
     }
