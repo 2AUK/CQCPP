@@ -82,6 +82,7 @@ void Atom::populate_basis(std::string in_basis)
             basisfunctions.push_back(BasisFunction(std::make_tuple(1,0,0), coord, expTemp, coefTemp));
             basisfunctions.push_back(BasisFunction(std::make_tuple(0,1,0), coord, expTemp, coefTemp));
             basisfunctions.push_back(BasisFunction(std::make_tuple(0,0,1), coord, expTemp, coefTemp));
+            std::advance(it, primNum);
         } else if (tokens[0] == "D"){
             primNum = std::stoi(tokens[1]);
             expTemp = Eigen::ArrayXf::Zero(primNum);
@@ -98,6 +99,7 @@ void Atom::populate_basis(std::string in_basis)
             basisfunctions.push_back(BasisFunction(std::make_tuple(0,2,0), coord, expTemp, coefTemp));
             basisfunctions.push_back(BasisFunction(std::make_tuple(0,1,1), coord, expTemp, coefTemp));
             basisfunctions.push_back(BasisFunction(std::make_tuple(0,0,2), coord, expTemp, coefTemp));
+            std::advance(it, primNum);
         } else {
             std::cout << "Fatal Error: Could not read basis-set for current atom OR Orbital not implemented!\n";
         }
