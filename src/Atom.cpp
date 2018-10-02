@@ -33,6 +33,7 @@ void Atom::populate_basis(std::string in_basis)
     std::vector<std::string> lines = split(atoms[z_val-1], '\n');
     bool firstLine = true;
     Eigen::Array3f expTemp;
+    Eigen::Array3f expSPTemp;
     Eigen::Array3f coefTemp;
     for (auto it = lines.begin(); it != lines.end(); it++){
         int primNum = 0;
@@ -50,6 +51,9 @@ void Atom::populate_basis(std::string in_basis)
                 coefTemp[i-1] = std::stof(toks[1]);
             }
             basisfunctions.push_back(BasisFunction(std::make_tuple(0, 0, 0), coord, expTemp, coefTemp));
+            std::advance(it, primNum);
+        } else if {tokens[0] == "SP"){
+
         }
     }
 }
