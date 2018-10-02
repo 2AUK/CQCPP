@@ -32,18 +32,18 @@ void Atom::populate_basis(std::string in_basis)
     std::vector<std::string> atoms = read_basis(in_basis);
     std::vector<std::string> lines = split(atoms[z_val-1], '\n');
     bool firstLine = true;
-    Eigen::Array3f expTemp;
-    Eigen::Array3f expSPTemp;
-    Eigen::Array3f coefTemp;
+    Eigen::ArrayXf expTemp;
+    Eigen::ArrayXf expSPTemp;
+    Eigen::ArrayXf coefTemp;
     for (auto it = lines.begin(); it != lines.end(); it++){
         int primNum = 0;
-        expTemp = Eigen::Array3f::Zero();
-        coefTemp = Eigen::Array3f::Zero();
         if (firstLine)
         { firstLine = false; continue; }
         std::vector<std::string> tokens  = split(*it, ' ');
         if (tokens[0] == "S"){
             primNum = std::stoi(tokens[1]);
+            expTemp = Eigen::ArrayXf::Zero(primNum);
+            coefTemp = Eigen::ArrayXf::Zero(primNum);
             for (int i = 1; i <= primNum; i++){
                 auto nx = std::next(it, i);
                 std::vector<std::string> toks = split(*nx, ' ');
@@ -52,8 +52,54 @@ void Atom::populate_basis(std::string in_basis)
             }
             basisfunctions.push_back(BasisFunction(std::make_tuple(0, 0, 0), coord, expTemp, coefTemp));
             std::advance(it, primNum);
-        } else if {tokens[0] == "SP"){
-
+        } else if (tokens[0] == "SP"){
+            primNum = std::stoi(tokens[1]);
+            expTemp = Eigen::ArrayXf::Zero(primNum);
+            expSPTemp = Eigen::ArrayXf::Zero(primNum);
+            coefTemp = Eigen::ArrayXf::Zero(primNum);
+            for (int i = 1; i <= primNum; i++){
+                auto nx = std::next(it, i);
+                std::vector<std::string> toks = split(*nx, ' ');
+                expTemp[i-1] = std::stof(toks[0]);
+                coefTemp[i-1] = std::stof(toks[1]);
+                expSPTemp[i-1] = std::stof(toks[2]);
+            }
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,0,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(1,0,0), coord, expSPTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,1,0), coord, expSPTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,0,1), coord, expSPTemp, coefTemp));
+            std::advance(it, primNum);
+        } else if (tokens[0] == "P"){
+            primNum = std::stoi(tokens[1]);
+            expTemp = Eigen::ArrayXf::Zero(primNum);
+            coefTemp = Eigen::ArrayXf::Zero(primNum);
+            for (int i = 1; i <= primNum; i++){
+                auto nx = std::next(it, i);
+                std::vector<std::string> toks = split(*nx, ' ');
+                expTemp[i-1] = std::stof(toks[0]);
+                coefTemp[i-1] = std::stof(toks[1]);
+            }
+            basisfunctions.push_back(BasisFunction(std::make_tuple(1,0,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,1,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,0,1), coord, expTemp, coefTemp));
+        } else if (tokens[0] == "D"){
+            primNum = std::stoi(tokens[1]);
+            expTemp = Eigen::ArrayXf::Zero(primNum);
+            coefTemp = Eigen::ArrayXf::Zero(primNum);
+            for (int i = 1; i <= primNum; i++){
+                auto nx = std::next(it, i);
+                std::vector<std::string> toks = split(*nx, ' ');
+                expTemp[i-1] = std::stof(toks[0]);
+                coefTemp[i-1] = std::stof(toks[1]);
+            }
+            basisfunctions.push_back(BasisFunction(std::make_tuple(2,0,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(1,1,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(1,0,1), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,2,0), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,1,1), coord, expTemp, coefTemp));
+            basisfunctions.push_back(BasisFunction(std::make_tuple(0,0,2), coord, expTemp, coefTemp));
+        } else {
+            std::cout << "Fatal Error: Could not read basis-set for current atom OR Orbital not implemented!\n";
         }
     }
 }

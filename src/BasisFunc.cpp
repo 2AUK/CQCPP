@@ -3,9 +3,9 @@
 #include <eigen3/Eigen/Core>
 
 BasisFunction::BasisFunction(std::tuple<int, int, int> a, 
-                    Eigen::Array3f b,
-                    Eigen::Array3f c,
-                    Eigen::Array3f d)
+                    Eigen::ArrayXf b,
+                    Eigen::ArrayXf c,
+                    Eigen::ArrayXf d)
 {
     shell = a;
     origin = b;
