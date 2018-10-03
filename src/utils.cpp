@@ -14,3 +14,11 @@ std::vector<std::string> split(const std::string& s, char delimiter)
     }
     return tokens;
 }
+
+float double_factorial(float n){
+    if (n <= 1){
+        return 1;
+    } else {
+        return n*double_factorial(n-2);
+    }
+}

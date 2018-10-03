@@ -10,6 +10,9 @@ Atom::Atom(int a, Eigen::Array3f c)
 {
     z_val = a;
     coord = c;
+    for (auto &bf: basisfunctions){
+        bf.normalise()
+    }
 }
 
 std::vector<std::string> Atom::read_basis(std::string in_basis)
