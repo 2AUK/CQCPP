@@ -8,7 +8,7 @@ class Molecule{
         int natoms;
         std::string molecule_name;
         std::vector<Atom> atoms;
-        Molecule(std::string inXYZ);
+        Molecule(std::string, std::string);
     private:
         void read_xyz(std::string inXYZ);
 };

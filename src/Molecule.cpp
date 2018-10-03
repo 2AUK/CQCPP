@@ -4,8 +4,11 @@
 #include <fstream>
 #include <sstream>
 
-Molecule::Molecule(std::string inXYZ){
+Molecule::Molecule(std::string inXYZ, std::string basis){
     read_xyz(inXYZ);
+    for (auto &atom: atoms){
+        atom.populate_basis(basis);
+    }
 }
 
 void Molecule::read_xyz(std::string inXYZ){
@@ -26,11 +29,10 @@ void Molecule::read_xyz(std::string inXYZ){
         natoms = std::stoi(mollines[0]);
         molecule_name = mollines[1];        
         Eigen::Array3f coordinates;
-        for (auto it = mollines.begin(); it != mollines.end(); it++){
-            std::advance(it, 2); //Skip first two header lines
+        for (auto it = mollines.begin()+2; it != mollines.end(); it++){
             coordinates = Eigen::Array3f::Zero();
             std::vector<std::string> tok = split(*it, ' ');
-            coordinates << std::stof(tok[1]), std::stof(tok[2]), std::stof(tok[3]);
+            coordinates << std::stof(tok[1]), std::stof(tok[2]), std::stod(tok[3]);
             atoms.push_back(Atom(std::stoi(tok[0]), coordinates));
         }
     }
