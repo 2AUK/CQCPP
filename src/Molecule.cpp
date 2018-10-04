@@ -8,6 +8,9 @@ Molecule::Molecule(std::string inXYZ, std::string basis){
     read_xyz(inXYZ);
     for (auto &atom: atoms){
         atom.populate_basis(basis);
+        for (auto &bf: atom.basisfunctions){
+            bf.normalize();
+        }
     }
 }
 

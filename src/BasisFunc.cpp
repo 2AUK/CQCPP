@@ -17,7 +17,11 @@ BasisFunction::BasisFunction(std::tuple<int, int, int> a,
 void BasisFunction::normalize()
 {
     //Implement Double Factorials!!
-    int l, m, n;
+    float l, m, n;
     std::tie(l,m,n) = shell;
-    norm = std::pow(2*exps/M_PI, 3/4)*(std::pow(4*exps, (l+m+n)/2))/(std::pow(double_factorial(2*l-1)*double_factorial(2*m-1)*double_factorial(2*n-1)), 1/2);
+    Eigen::ArrayXf term1 = 2*exps/M_PI;
+    Eigen::ArrayXf term2 = 4*exps;
+    float term3 = std::pow(double_factorial(2*l-1) * double_factorial(2*m-1) * double_factorial(2*n-1), 1/2);
+    Eigen::ArrayXf term12 = term1.pow(3.0/4.0) * term2.pow((l+m+n)/2.0);
+    norm = term12 / term3;
 }
