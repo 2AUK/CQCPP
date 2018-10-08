@@ -2,9 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "Atom.h"
-#include "BasisFunc.h"
-#include "utils.h"
+#include "Atom.hpp"
 
 Atom::Atom(int a, Eigen::Array3f c)
 {

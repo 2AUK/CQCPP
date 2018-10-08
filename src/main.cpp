@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "Molecule.h"
+#include "Molecule.hpp"
 
 int main(){
     std::string input_file = "/home/abdullah/Code/C++/SCF/test/h20.dat";

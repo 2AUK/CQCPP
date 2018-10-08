@@ -1,5 +1,5 @@
-#include "BasisFunc.h"
-#include "utils.h"
+#include "BasisFunc.hpp"
+#include "utils.hpp"
 #include <cmath>
 #include <eigen3/Eigen/Core>
 

@@ -1,5 +1,5 @@
-#include "Molecule.h"
-#include "utils.h"
+#include "Molecule.hpp"
+#include "utils.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
