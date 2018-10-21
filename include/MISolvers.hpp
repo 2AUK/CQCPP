@@ -5,7 +5,8 @@ enum Integral_Type{
     overlap,
     kinetic,
     nuclear,
-    electron
+    electron,
+    momentum
 };
 
 class IntegralSolver{
