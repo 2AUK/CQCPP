@@ -6,7 +6,6 @@ enum Integral_Type{
     kinetic,
     nuclear,
     electron,
-    momentum
 };
 
 class IntegralSolver{
