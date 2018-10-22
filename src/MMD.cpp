@@ -4,12 +4,28 @@ MMD::MMD(Molecule input_molecule){
 
 }
 
-float MMD::one_electron_integral(Integral_Type itype){
-    
+float MMD::E(){
+
 }
 
-float MMD::two_electron_integral(Integral_Type itype){
+float MMD::R(){
 
+}
+
+float MMD::one_electron_integral(std::string itype){
+    if (itype == "overlap"){
+
+    } else if (itype == "kinetic"){
+
+    } else if (itype == "nuclear"){
+
+    }
+}
+
+float MMD::two_electron_integral(std::string itype){
+    if (itype == "electron"){
+
+    }
 }
 
 Eigen::ArrayXXf MMD::one_electron_integral_matrix(){
