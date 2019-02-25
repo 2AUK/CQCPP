@@ -21,3 +21,18 @@ class MMD : public IntegralSolver{
         float E();
         float R();
 };
+
+class THO : public IntegralSolver{
+public:
+  THO(Molecule);
+  virtual float one_electron_integral(std::string);
+  virtual EigenArrayXXf one_electron_integral_matrix();
+private:
+  float binomial();
+}
+   
+    class HGP : public IntegralSolver{
+    public:
+	virtual float two_electron_integral(std::string);
+	virtual Eigen::ArrayXXf two_electron_integral_matrix();
+    }

@@ -22,3 +22,7 @@ float double_factorial(float n){
         return n*double_factorial(n-2);
     }
 }
+
+float binomial(float n, float k){
+
+}
