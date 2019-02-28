@@ -12,9 +12,12 @@ public:
 
 class THO : public IntegralSolver{
 public:
-  THO(Molecule);
+  THO(Molecule&);
   float one_electron_integral(std::string);
-  EigenArrayXXf one_electron_integral_matrix();
+  Eigen::ArrayXXf one_electron_integral_matrix();
+  float two_electron_integral(std::string);
+  Eigen::ArrayXXf two_electron_integral_matrix();
+  Molecule system;
 private:
-  float binomial_factor();
+  float f(float, float, float, float, float);
 };

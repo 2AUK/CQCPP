@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Molecule.hpp"
+#include "MISolvers.hpp"
 
 int main(){
   std::string input_file = "/home/abdullah/Code/C++/SCF/test/h20.dat";
@@ -15,4 +16,6 @@ int main(){
       std::cout << "Basisfunction Shell:\t" << l << m << n << "\nExponents:\t" << bf.exps << "\nCoefficients:\t" << bf.coefs << "\nOrigin:\t" << bf.origin << "\nNorm:\t" << bf.norm << '\n';
     }
   }
+  std::cout << "f function test\n";
+  THO sys(water);
 }
