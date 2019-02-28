@@ -31,5 +31,9 @@ float double_factorial(float n){
 }
 
 float binomial(float n, float k){
-  return factorial(n) / (factorial(k) * factorial(n - k));
+  if (n == k){
+    return 1;
+  } else {
+    return factorial(n) / (factorial(k) * factorial(n - k));
+  }
 }

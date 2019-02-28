@@ -9,9 +9,11 @@ THO::THO(Molecule& input_molecule) : system(input_molecule){
 }
 
 float THO::f(float j, float l, float m, float PA, float PB){
-    for (float k = std::min(j, l); k < std::max(static_cast<float>(0.0), j-m); k++){
-	binomial(l, k) * binomial(m, j-k) * std::pow(PA, l-k) * std::pow(PB, m+k-j);
+    float total = 0;
+    for (float k = std::max(static_cast<float>(0.0), j-m); k < std::min(j, l)+1; k++){
+	total += binomial(l, k) * binomial(m, j-k) * std::pow(PA, l-k) * std::pow(PB, m+k-j);
     }
+    return total;
 }
 
 float THO::one_electron_integral(std::string int_type){}
