@@ -34,10 +34,11 @@ float THO::overlap(std::tuple<int, int, int> lmn1,
   std::tie(l2, m2, n2) = lmn2;
   float gamma = a + b;
   Eigen::ArrayXf Q = a * b * A * B / gamma;
+  float dist2 = (A - B).matrix().squaredNorm();
   S_x = overlap_1d(l1, l2, Q[0] - A[0], Q[0] - B[0], gamma);
   S_y = overlap_1d(m1, m2, Q[1] - A[1], Q[1] - B[1], gamma);
   S_z = overlap_1d(n1, n2, Q[2] - A[2], Q[2] - B[2], gamma);
-  return S_x * S_y * S_z;
+  return std::exp(-1 * a * b * dist2 / gamma) * S_x * S_y * S_z;
 }
 
 float THO::overlap_1d(int l1, int l2, float PAx, float PBx, float gamma){
