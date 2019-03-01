@@ -20,5 +20,6 @@ public:
   Molecule system;
 private:
   float f(float, float, float, float, float);
-  float overlap(std::tuple<int, int, int>, Eigen::ArrayXf, Eigen::ArrayXf, std::tuple<int, int, int>, Eigen::ArrayXf, Eigen::ArrayXf);
+  float overlap(std::tuple<int, int, int>, Eigen::ArrayXf, float, std::tuple<int, int, int>, Eigen::ArrayXf, float); 
+  float overlap_1d(int, int, float, float, float);
 };

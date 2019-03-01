@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <eigen3/Eigen/Core>
 
 std::vector<std::string> split(const std::string& s,char delimiter); // Tokenize string based on a char delimiter
 
