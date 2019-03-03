@@ -18,4 +18,6 @@ private:
   float S(BasisFunction, BasisFunction);
   float overlap(std::tuple<int, int, int>, Eigen::ArrayXf, float, std::tuple<int, int, int>, Eigen::ArrayXf, float); 
   float overlap_1d(int, int, float, float, float);
+  float kinetic(std::tuple<int, int, int>, Eigen::ArrayXf, float, std::tuple<int, int, int>, Eigen::ArrayXf, float);
+  float T(BasisFunction, BasisFunction);
 };
