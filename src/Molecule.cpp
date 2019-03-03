@@ -10,6 +10,7 @@ Molecule::Molecule(std::string inXYZ, std::string basis){
     atom.populate_basis(basis);
     for (auto &bf: atom.basisfunctions){
       bf.normalize();
+      cgbfs.push_back(bf);
     }
   }
 }

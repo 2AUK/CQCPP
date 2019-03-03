@@ -5,21 +5,39 @@
 #include <iostream>
 
 THO::THO(Molecule& input_molecule) : system(input_molecule){
-    std::cout << f(0, 0, 0, 0, 0) << std::endl;
+  std::cout << integral("overlap") << std::endl;
 }
 
 float THO::f(float j, float l, float m, float PA, float PB){
-    float total = 0;
-    for (float k = std::max(static_cast<float>(0.0), j-m); k < std::min(j, l)+1; k++){
-	total += binomial(l, k) * binomial(m, j-k) * std::pow(PA, l-k) * std::pow(PB, m+k-j);
-    }
-    return total;
+  float total = 0;
+  for (float k = std::max(static_cast<float>(0.0), j-m); k < std::min(j, l)+1; k++){
+    total += binomial(l, k) * binomial(m, j-k) * std::pow(PA, l-k) * std::pow(PB, m+k-j);
+  }
+  return total;
 }
 
-float THO::one_electron_integral(std::string int_type){
-    if (int_type == "overlap"){
-
+Eigen::ArrayXXf THO::integral(std::string int_type){
+  if (int_type == "overlap"){
+    int aos = static_cast<int>(system.cgbfs.size());
+    Eigen::ArrayXXf S_mat = Eigen::ArrayXXf(aos, aos);
+    for(int i = 0; i < aos; i++){
+      for(int j = 0; j < aos; j++){
+	S_mat(i,j) = S(system.cgbfs[i], system.cgbfs[j]);
+      }
     }
+    return S_mat;
+  }else if(int_type == "kinetic"){
+    
+  }
+}
+
+float THO::S(BasisFunction a, BasisFunction b){
+  float total = 0;
+  for (int i = 0; i < a.coefs.size(); i++){
+    for (int j = 0; j < b.coefs.size(); j++){
+      total += a.norm[i] * b.norm[j] * a.coefs[i] * b.coefs[j] * overlap(a.shell, a.origin, a.exps[i], b.shell, b.origin, b.exps[j]);
+    }
+  }
 }
 
 float THO::overlap(std::tuple<int, int, int> lmn1,
@@ -48,10 +66,3 @@ float THO::overlap_1d(int l1, int l2, float PAx, float PBx, float gamma){
   }
   return std::sqrt(M_PI/gamma) * total;
 }
-
-Eigen::ArrayXXf THO::one_electron_integral_matrix(){}
-
-float THO::two_electron_integral(std::string int_type){}
-
-Eigen::ArrayXXf THO::two_electron_integral_matrix(){}
-
