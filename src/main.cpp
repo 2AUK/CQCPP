@@ -10,12 +10,11 @@ int main(){
   std::cout << water.molecule_name << '\n';
   int l,m,n;
   for (const auto atom: water.atoms){
-    std::cout << "Atomic Number:\t" << atom.z_val << "\nCoordinates:\t" << atom.coord << '\n';
+    std::cout << "Atomic Number:\t" << atom.z_val << "\nCoordinates:\n" << atom.coord << '\n';
     for (const auto bf: atom.basisfunctions){
       std::tie(l,m,n) = bf.shell;
-      std::cout << "Basisfunction Shell:\t" << l << m << n << "\nExponents:\t" << bf.exps << "\nCoefficients:\t" << bf.coefs << "\nOrigin:\t" << bf.origin << "\nNorm:\t" << bf.norm << '\n';
+      std::cout << "Basisfunction Shell:\t" << l << m << n << "\nExponents:\n" << bf.exps << "\nCoefficients:\n" << bf.coefs << "\nOrigin:\n" << bf.origin << "\nNorm:\n" << bf.norm << '\n';
     }
   }
-  std::cout << "f function test\n";
   THO sys(water);
 }

@@ -34,6 +34,7 @@ Eigen::ArrayXXf THO::integral(std::string int_type){
 	T_mat(i,j) = T(system.cgbfs[i], system.cgbfs[j]);
       }
     }
+    return T_mat;
   }
 }
 
@@ -81,13 +82,19 @@ float THO::kinetic(std::tuple<int, int, int> lmn1,
 		   Eigen::ArrayXf B,
 		   float b)
 {
-  float l1, m1, n1, l2, m2, n2;
+  int l1, m1, n1, l2, m2, n2;
   std::tie(l1, m1, n1) = lmn1;
   std::tie(l2, m2, n2) = lmn2;
-  float term1 = b*((2*l2 + m2 + n2)+3)*overlap(lmn1, A, a, lmn2, B, b);
-  float term2 = -2*b*b*(overlap(lmn1, A, a, std::make_tuple(l2+2, m2, n1), B, b) + overlap(lmn1, A, a, std::make_tuple(l2, m2+2, n2), B, b) + overlap(lmn1, A, a, std::make_tuple(l2, m2, n2+2), B, b));
-  float term3 = -0.5 * ((l2*(l2-1)*overlap(lmn1, A, a, std::make_tuple(l2-2, m2, n2), B, b)) + (m2*(m2-1)*overlap(lmn1, A, a, std::make_tuple(l2, m2-2, n2), B, b)) + (n2*(n2-1)*overlap(lmn1, A, a, std::make_tuple(l2, m2, n2-2), B, b)));
-  return 1;
+  float term1 = b*(2*(l2 + m2 + n2)+3)*overlap(lmn1, A, a, lmn2, B, b);
+  float term2 = -2.0*std::pow(b, 2.0)*(
+			overlap(lmn1, A, a, std::make_tuple(l2+2, m2, n1), B, b) +
+			overlap(lmn1, A, a, std::make_tuple(l2, m2+2, n2), B, b) +
+			overlap(lmn1, A, a, std::make_tuple(l2, m2, n2+2), B, b));
+  float term3 = -0.5 * (
+			(l2*(l2-1)*overlap(lmn1, A, a, std::make_tuple(l2-2, m2, n2), B, b)) +
+			(m2*(m2-1)*overlap(lmn1, A, a, std::make_tuple(l2, m2-2, n2), B, b)) +
+			(n2*(n2-1)*overlap(lmn1, A, a, std::make_tuple(l2, m2, n2-2), B, b)) );
+  return term1 + term2 + term3;
 }
 
 float THO::T(BasisFunction a, BasisFunction b){
