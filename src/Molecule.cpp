@@ -6,13 +6,19 @@
 
 Molecule::Molecule(std::string inXYZ, std::string basis){
   read_xyz(inXYZ);
+  int gtos = 0;
+  int cgfs = 0;
   for (auto &atom: atoms){
     atom.populate_basis(basis);
     for (auto &bf: atom.basisfunctions){
+      gtos += bf.coefs.size();
+      cgfs += 1;
       bf.normalize();
       cgbfs.push_back(bf);
     }
   }
+  nGTOs = gtos;
+  nCGFs = cgfs;
 }
 
 void Molecule::read_xyz(std::string inXYZ){

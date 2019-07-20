@@ -12,4 +12,4 @@ float double_factorial(float n); //Calculates n!!
 
 float binomial(float n, float k); //Calculates binomials
 
-std::vector<std::tuple<int, int, int>> get_momentums(int angular_momentum);
+int te_index(int i, int j, int k, int l);
