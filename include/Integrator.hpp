@@ -14,5 +14,5 @@ public:
   Eigen::ArrayXXf J(); //Multipole moment
 private:
   float E(int, int, int, float, float, float);
-  float overlap();
+  float overlap(Eigen::ArrayXf, std::array<int, 3>, float, Eigen::ArrayXf, std::array<int, 3>, float);
 };
