@@ -14,14 +14,16 @@ Atom::Atom(int a, Eigen::Array3f c){
 std::vector<std::string> Atom::read_basis(std::string in_basis){
   std::ifstream basis;
   std::stringstream buffer;
+  std::vector<std::string> atoms;
   basis.open(in_basis);
   if (basis.is_open()){
     buffer << basis.rdbuf();
-    std::vector<std::string> atoms = split(buffer.str(), '*');
+    atoms = split(buffer.str(), '*');
     atoms.pop_back();
     return atoms;
   } else {
     std::cout << "Could not read basis-set file!\n";
+    return atoms;
   }
 }
 

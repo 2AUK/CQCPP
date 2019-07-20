@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <string>
 #include "Molecule.hpp"
-#include "MISolvers.hpp"
+#include "Integrator.hpp"
 #include <eigen3/Eigen/Core>
 
 int main(){
