@@ -7,7 +7,7 @@
  *   \file Integrator.hpp
  *   \brief Integral evaluation module
  *
- *   McMurchie-Davidson scheme for integral evaluation
+ *   McMurchie-Davidson scheme for integral evaluation. Helgaker, Trygve, and Peter R. Taylor. “Gaussian basis sets and molecular integrals.” Modern Electronic Structure (1995).
  */
 
 class Integrator{

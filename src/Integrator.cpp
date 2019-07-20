@@ -71,7 +71,6 @@ float Integrator::overlap(Eigen::ArrayXf A, std::array<int, 3> lmn1, float a, Ei
   float Sz = E(n1, n2, 0, A[2] - B[2], a, b);
 
   return pow(M_PI/p, 1.5) * Sx * Sy * Sz;
-  std::cout << pow(M_PI/p, 1.5) * Sx * Sy * Sz << std::endl;
 }
 
 /**

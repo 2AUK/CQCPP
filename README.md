@@ -1,3 +1,3 @@
 #### C++ Quantum Chemistry Project
 
-Writing quantum chemistry software in C++. This is essentially just a project for learning C++ and some computational quantum chemistry.
+Quantum chemistry software in C++. More updates as I expand on features.

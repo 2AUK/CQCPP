@@ -34,7 +34,7 @@ BasisFunction::BasisFunction(std::array<int, 3> a,
 /**
  *  \brief Normalises the basis functions
  *
- *  This function populates the norm attribute with the normalisation constants, calculated from the exponent and shell information.
+ *  This function populates the norm attribute with the normalisation constants, calculated from the exponent and shell information. Taketa, H., Huzinaga, S. and O-ohata, K., 1966. Gaussian-expansion methods for molecular integrals. Journal of the physical society of Japan, 21(11), pp.2313-2324.
  *  \return void
  */
 void BasisFunction::normalize(){
