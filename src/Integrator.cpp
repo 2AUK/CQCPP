@@ -11,7 +11,6 @@
 
 
 /**
- *  \internal
  *
  *  \brief Constructor for Integrator object
  *
@@ -48,6 +47,7 @@ float E(int i, int j, int t, float Qx, float a, float b){
     return (1 / (2 * p)) * E(i-1, j, t-1, Qx, a, b) - ((q * Qx) / a) * E(i-1, j, t, Qx, a, b) + (t+1) * E(i-1, j, t+1, Qx, a, b);
   }
 }
+
 /**
  *  \brief Primitive gaussian overlap distribution
  *
@@ -71,6 +71,24 @@ float overlap(Eigen::ArrayXf A, std::array<int, 3> lmn1, float a, Eigen::ArrayXf
   float Sz = E(n1, n2, 0, A[2] - B[2], a, b);
 
   return pow(M_PI/p, 1.5) * Sx * Sy * Sz;
+  std::cout << pow(M_PI/p, 1.5) * Sx * Sy * Sz << std::endl;
 }
 
+/**
+ *  \brief Contracted gaussian overlap distribution
+ *  
+ *  This function contracts the primitive gaussians and calculates the contracted gaussian overlap distribution.
+ *  \param bf1 first basis function object containing all the relevant information for integral calculation
+ *  \param bf2 second basis function object containing all the relevant information for integral calculation
+ *  \return Value of the overlap between two contracted gaussians.
+ */
 
+float S(BasisFunction bf1, BasisFunction bf2){
+  float total = 0;
+  for (int i = 0; i < bf1.coefs.size(); i++){
+    for (int j = 0; j < bf2.coefs.size(); j++){
+      total += bf1.norm[i] * bf2.norm[j] * bf1.coefs[i] * bf2.coefs[j] * overlap(bf1.origin, bf1.shell, bf1.exps[i], bf2.origin, bf2.shell, bf2.exps[j]);
+    }
+  }
+  return total;
+}

@@ -22,4 +22,5 @@ public:
 private:
   float E(int, int, int, float, float, float); /*!< Hermite expansion coefficients for calculating overlap from hermite gaussian functions. Implementation details in Integrator.cpp */
   float overlap(Eigen::ArrayXf, std::array<int, 3>, float, Eigen::ArrayXf, std::array<int, 3>, float); /*!< Function to calculate overlap between primitive gaussian functions. Implementation details in Integrator.cpp */
+  float S(BasisFunction, BasisFunction);
 };
