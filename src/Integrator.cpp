@@ -34,7 +34,7 @@ Integrator::Integrator(Molecule& input_molecule) : system(input_molecule){
  *  \return Full solution of the expansion coefficient generated recursively
  */
 
-float E(int i, int j, int t, float Qx, float a, float b){
+float Integrator::E(int i, int j, int t, float Qx, float a, float b){
   float p = a + b;
   float q = (a * b) / p;
   if (i == 0 && j == 0 && t == 0){
@@ -60,7 +60,7 @@ float E(int i, int j, int t, float Qx, float a, float b){
  *  \param b Exponent for second primitive gaussian
  *  \return Value of the overlap between two primitive gaussians
  */
-float overlap(Eigen::ArrayXf A, std::array<int, 3> lmn1, float a, Eigen::ArrayXf B, std::array<int, 3> lmn2, float b){
+float Integrator::overlap(Eigen::ArrayXf A, std::array<int, 3> lmn1, float a, Eigen::ArrayXf B, std::array<int, 3> lmn2, float b){
   
   float p = a + b;
   float l1 = lmn1[0]; float m1 = lmn1[1]; float n1 = lmn1[2];
@@ -78,12 +78,12 @@ float overlap(Eigen::ArrayXf A, std::array<int, 3> lmn1, float a, Eigen::ArrayXf
  *  \brief Contracted gaussian overlap distribution
  *  
  *  This function contracts the primitive gaussians and calculates the contracted gaussian overlap distribution.
- *  \param bf1 first basis function object containing all the relevant information for integral calculation
- *  \param bf2 second basis function object containing all the relevant information for integral calculation
+ *  \param bf1 first BasisFunction object containing all the relevant information for integral calculation
+ *  \param bf2 second BasisFunction object containing all the relevant information for integral calculation
  *  \return Value of the overlap between two contracted gaussians.
  */
 
-float S(BasisFunction bf1, BasisFunction bf2){
+float Integrator::S(BasisFunction bf1, BasisFunction bf2){
   float total = 0;
   for (int i = 0; i < bf1.coefs.size(); i++){
     for (int j = 0; j < bf2.coefs.size(); j++){
@@ -91,4 +91,21 @@ float S(BasisFunction bf1, BasisFunction bf2){
     }
   }
   return total;
+}
+
+/**
+ *  \brief Generates overlap matrix from contracted gaussians
+ * 
+ *  Member function to compute overlap matrix from system attribute of Integrator class.
+ *  \return Eigen Array who's elements are the overlap distribution of contracted gaussians.
+ */
+Eigen::ArrayXXf Integrator::SMatrix(){
+  int aos = system.nCGFs;
+  Eigen::ArrayXXf retmat = Eigen::ArrayXXf(aos, aos);
+  for (int i = 0; i < aos; i++){
+    for (int j = 0; j < aos; j++){
+      retmat(i, j) = S(system.cgbfs[i], system.cgbfs[j]);
+    }
+  }
+  return retmat;
 }

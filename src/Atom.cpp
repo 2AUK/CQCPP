@@ -6,11 +6,33 @@
 #include <experimental/array>
 #include "Atom.hpp"
 
+/**
+ *   \file Atom.cpp
+ *   \brief Implementation for Atom
+ *
+ *   All the implementation details for all Atom routines held in Atom.hpp
+ */
+
+/**
+ *  \brief Constructor for Atom object
+ *
+ *  \param a Atom number
+ *  \param c Eigen Array containing coordinates of Atom
+ *  \return return type
+ */
 Atom::Atom(int a, Eigen::Array3f c){
   z_val = a;
   coord = c;
 }
 
+
+/**
+ *  \brief Tokenises basis-set files
+ *
+ * Basis-set files are contained in basis_sets directory and are in Gaussian94 format taken from <a href="https://www.basissetexchange.org/">Basis Set Exchange</a>. Requires for file to contain information from the beginning of periodic table.
+ *  \param in_basis Name of desired basis-set
+ *  \return Vector of strings containing tokenized basis-set information.
+ */
 std::vector<std::string> Atom::read_basis(std::string in_basis){
   std::ifstream basis;
   std::stringstream buffer;
@@ -27,6 +49,14 @@ std::vector<std::string> Atom::read_basis(std::string in_basis){
   }
 }
 
+/**
+ *  \brief Populates basisfunctions vector in Atom object.
+ *
+ *  Finds orbital and coefficient values from Gaussian94 basis-set file.
+ *
+ *  \param in_basis Name of desired basis-set.
+ *  \return void
+ */
 void Atom::populate_basis(std::string in_basis){
   std::vector<std::string> atoms = read_basis(in_basis);
   std::vector<std::string> lines = split(atoms[z_val-1], '\n');

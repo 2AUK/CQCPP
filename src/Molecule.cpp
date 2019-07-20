@@ -4,6 +4,21 @@
 #include <fstream>
 #include <sstream>
 
+/**
+ *   \file Molecule.cpp
+ *   \brief Implementation for Molecule member functions
+ *
+ *   All the implementation details for all Molecule routines held in Molecule.hpp
+ */
+
+
+/**
+ *  \brief Constructor for Molecule object
+ *
+ *  \param inXYZ String containing file path to input .xyz file
+ *  \param basis String containing choice of basis-set to use 
+ *  \return Molecule object
+ */
 Molecule::Molecule(std::string inXYZ, std::string basis){
   read_xyz(inXYZ);
   int gtos = 0;
@@ -21,15 +36,16 @@ Molecule::Molecule(std::string inXYZ, std::string basis){
   nCGFs = cgfs;
 }
 
+
+/**
+ *  \brief Reads .xyz file
+ *
+ *  Reads .xyz files of standard format. First two lines are header information, the rest atom data.
+ *
+ *  \param inXYZ String containing file path to input .xyz file
+ *  \return void
+ */
 void Molecule::read_xyz(std::string inXYZ){
-  /* Currently the format specified is very controlled:
-   * No of atoms
-   * Molecule Name
-   * Z_number X Y Z
-   * Z_number_2 X_2 Y_2 Z_2
-   * etc
-   * Meaning that the first two lines are always header lines and everything is else atom information
-   */
   std::ifstream mol;
   std::stringstream buffer;
   mol.open(inXYZ);

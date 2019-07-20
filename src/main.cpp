@@ -18,6 +18,7 @@ int main(){
     }
   }
   Integrator isys(water);
+  std::cout << isys.SMatrix() << std::endl;
   std::cout << "Number of GTOS:\t" << water.nGTOs << std::endl;
   std::cout << "Number of CGFs:\t" << water.nCGFs << std::endl;
 }
