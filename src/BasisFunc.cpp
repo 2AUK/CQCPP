@@ -20,9 +20,9 @@
  *  \return BasisFunction object
  */
 BasisFunction::BasisFunction(std::array<int, 3> a, 
-			     Eigen::ArrayXf b,
-			     Eigen::ArrayXf c,
-			     Eigen::ArrayXf d)
+			     Eigen::ArrayXd b,
+			     Eigen::ArrayXd c,
+			     Eigen::ArrayXd d)
 {
   shell = a;
   origin = b;
@@ -40,9 +40,9 @@ BasisFunction::BasisFunction(std::array<int, 3> a,
 void BasisFunction::normalize(){
   int l = shell[0]; int m = shell[1]; int n = shell[2];
   //float L = l+m+n;
-  Eigen::ArrayXf num = std::pow(2.0, 2.0*(l+m+n) + 3.0/2.0) * exps.pow((l+m+n)+3.0/2.0);
+  Eigen::ArrayXd num = std::pow(2.0, 2.0*(l+m+n) + 3.0/2.0) * exps.pow((l+m+n)+3.0/2.0);
   float denom = double_factorial(2*l-1) * double_factorial(2*m-1) * double_factorial(2*n-1) * std::pow(M_PI, 3.0/2.0);
-  Eigen::ArrayXf nd = num / denom;
+  Eigen::ArrayXd nd = num / denom;
   norm = nd.sqrt();
   //This code isn't fully working
   //Double check notes on CGBF normalisation

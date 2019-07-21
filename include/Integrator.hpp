@@ -14,13 +14,15 @@ class Integrator{
 public:
   Integrator(Molecule&);
   Molecule system; /**< System for which integrals are generated. */
-  Eigen::ArrayXXf SMatrix(); 
-  Eigen::ArrayXXf TMatrix(); 
-  Eigen::ArrayXXf VMatrix(); 
-  Eigen::ArrayXf ERIMatrix();  
-  Eigen::ArrayXXf JMatrix(); 
+  Eigen::ArrayXXd SMatrix(); 
+  Eigen::ArrayXXd TMatrix(); 
+  Eigen::ArrayXXd VMatrix(); 
+  Eigen::ArrayXd ERIMatrix();  
+  Eigen::ArrayXXd JMatrix(); 
 private:
-  float E(int, int, int, float, float, float); 
-  float overlap(Eigen::ArrayXf, std::array<int, 3>, float, Eigen::ArrayXf, std::array<int, 3>, float); 
-  float S(BasisFunction, BasisFunction);
+  double E(int, int, int, double, double, double); 
+  double overlap(Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double); 
+  double S(BasisFunction, BasisFunction);
+  double kinetic(Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double);
+  double T(BasisFunction, BasisFunction);
 };

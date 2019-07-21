@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(SCF)
-
+include(CTest)
 set(CMAKE_CXX_FLAGS "-g -Wall -Wextra")
 include_directories(include)
-
 file (GLOB SOURCES "src/*.cpp")
 
 add_executable(scf ${SOURCES})
 
+add_subdirectory(tests)
 option(BUILD_DOC "Build documentation" ON)
-
 find_package(Doxygen)
 if (DOXYGEN_FOUND)
    # set input and output files

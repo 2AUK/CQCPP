@@ -1,5 +1,6 @@
 #include "Integrator.hpp"
 #include <math.h>
+#include <experimental/array>
 
 /**
  *   \file Integrator.cpp
@@ -34,17 +35,18 @@ Integrator::Integrator(Molecule& input_molecule) : system(input_molecule){
  *  \return Full solution of the expansion coefficient generated recursively
  */
 
-float Integrator::E(int i, int j, int t, float Qx, float a, float b){
-  float p = a + b;
-  float q = (a * b) / p;
-  if (i == 0 && j == 0 && t == 0){
-    return(exp(-q * Qx * Qx));
-  } else if (t < 0 || t > (i + j)){
+double Integrator::E(int i, int j, int t, double Qx, double a, double b){
+  double p = a + b;
+  double q = (a * b) / p;
+  if (t < 0 || t > (i + j)){
     return 0.0;
-  } else if (i == 0){
-    return (1 / (2 * p)) * E(i, j-1, t-1, Qx, a, b) + ((q * Qx) / b) * E(i, j-1, t, Qx, a, b) + (t+1) * E(i, j-1, t+1, Qx, a, b);
-  } else {
+  } else if (t == 0 && i == 0 && j == 0){
+    return exp(-q * Qx * Qx);
+  } else if (j == 0){
     return (1 / (2 * p)) * E(i-1, j, t-1, Qx, a, b) - ((q * Qx) / a) * E(i-1, j, t, Qx, a, b) + (t+1) * E(i-1, j, t+1, Qx, a, b);
+  } else {
+    return (1 / (2 * p)) * E(i, j-1, t-1, Qx, a, b) + ((q * Qx) / b) * E(i, j-1, t, Qx, a, b) + (t+1) * E(i, j-1, t+1, Qx, a, b);
+    
   }
 }
 
@@ -60,15 +62,15 @@ float Integrator::E(int i, int j, int t, float Qx, float a, float b){
  *  \param b Exponent for second primitive gaussian
  *  \return Value of the overlap between two primitive gaussians
  */
-float Integrator::overlap(Eigen::ArrayXf A, std::array<int, 3> lmn1, float a, Eigen::ArrayXf B, std::array<int, 3> lmn2, float b){
+double Integrator::overlap(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, Eigen::ArrayXd B, std::array<int, 3> lmn2, double b){
   
-  float p = a + b;
-  float l1 = lmn1[0]; float m1 = lmn1[1]; float n1 = lmn1[2];
-  float l2 = lmn2[0]; float m2 = lmn2[1]; float n2 = lmn2[2];
+  double p = a + b;
+  int l1 = lmn1[0]; int m1 = lmn1[1]; int n1 = lmn1[2];
+  int l2 = lmn2[0]; int m2 = lmn2[1]; int n2 = lmn2[2];
 
-  float Sx = E(l1, l2, 0, A[0] - B[0], a, b);
-  float Sy = E(m1, m2, 0, A[1] - B[1], a, b);
-  float Sz = E(n1, n2, 0, A[2] - B[2], a, b);
+  double Sx = E(l1, l2, 0, A[0] - B[0], a, b);
+  double Sy = E(m1, m2, 0, A[1] - B[1], a, b);
+  double Sz = E(n1, n2, 0, A[2] - B[2], a, b);
 
   return pow(M_PI/p, 1.5) * Sx * Sy * Sz;
 }
@@ -82,8 +84,8 @@ float Integrator::overlap(Eigen::ArrayXf A, std::array<int, 3> lmn1, float a, Ei
  *  \return Value of the overlap between two contracted gaussians.
  */
 
-float Integrator::S(BasisFunction bf1, BasisFunction bf2){
-  float total = 0;
+double Integrator::S(BasisFunction bf1, BasisFunction bf2){
+  double total = 0;
   for (int i = 0; i < bf1.coefs.size(); i++){
     for (int j = 0; j < bf2.coefs.size(); j++){
       total += bf1.norm[i] * bf2.norm[j] * bf1.coefs[i] * bf2.coefs[j] * overlap(bf1.origin, bf1.shell, bf1.exps[i], bf2.origin, bf2.shell, bf2.exps[j]);
@@ -98,12 +100,65 @@ float Integrator::S(BasisFunction bf1, BasisFunction bf2){
  *  Member function to compute overlap matrix from system attribute of Integrator class.
  *  \return Eigen Array who's elements are the overlap distribution of contracted gaussians.
  */
-Eigen::ArrayXXf Integrator::SMatrix(){
+Eigen::ArrayXXd Integrator::SMatrix(){
   int aos = system.nCGFs;
-  Eigen::ArrayXXf retmat = Eigen::ArrayXXf(aos, aos);
+  Eigen::ArrayXXd retmat = Eigen::ArrayXXd(aos, aos);
   for (int i = 0; i < aos; i++){
     for (int j = 0; j < aos; j++){
       retmat(i, j) = S(system.cgbfs[i], system.cgbfs[j]);
+    }
+  }
+  return retmat;
+}
+
+
+double Integrator::kinetic(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, Eigen::ArrayXd B, std::array<int, 3> lmn2, double b){
+  int l1 = lmn1[0]; int m1 = lmn1[1]; int n1 = lmn1[2];
+  int l2 = lmn2[0]; int m2 = lmn2[1]; int n2 = lmn2[2];
+
+  // double p = a + b;
+
+  // double Sx = E(l1, l2, 0, A[0] - B[0], a, b);
+  // double Sy = E(m1, m2, 0, A[1] - B[1], a, b);
+  // double Sz = E(n1, n2, 0, A[2] - B[2], a, b);
+
+  // double Tx = (l2*(l2-1)*E(l1, l2-2, 0, A[0]-B[0], a, b)) - (2*b*(2*l2 + 1)*Sx) + (4*pow(b, 2)*E(l1, l2+2, 0, A[0]-B[0], a, b));
+  // Tx *= Sy * Sz;
+
+  // double Ty = (m2*(m2-1)*E(m1, m2-2, 0, A[1]-B[1], a, b)) - (2*b*(2*m2 + 1)*Sy) + (4*pow(b, 2)*E(m1, m2+2, 0, A[1]-B[1], a, b));
+  // Ty *= Sx * Sz;
+
+  // double Tz = (n2*(n2-1)*E(n1, n2-2, 0, A[2]-B[2], a, b)) - (2*b*(2*n2 + 1)*Sz) + (4*pow(b, 2)*E(n1, n2+2, 0, A[2]-B[2], a, b));
+  // Tz *= Sy * Sx;
+  double term0 = b*(2*(l2+m2+n2)+3)*\
+    overlap(A, std::experimental::make_array(l1, m1, n1), a, B, std::experimental::make_array(l2,m2,n2),b);
+  double term1 = -2*pow(b,2)*\
+    (overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2+2,m2,n2),b) +
+     overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2,m2+2,n2),b) +
+     overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2,m2,n2+2),b));
+  double term2 = -0.5*(l2*(l2-1)*overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2-2,m2,n2),b) +
+		       m2*(m2-1)*overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2,m2-2,n2),b) +
+		       n2*(n2-1)*overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2,m2,n2-2),b));
+  return term0 + term1 +term2;
+  // return -0.5 ( Tx * Ty * Tz * pow(M_PI/p, 1.5));
+}
+
+double Integrator::T(BasisFunction bf1, BasisFunction bf2){
+  double total = 0;
+  for (int i = 0; i < bf1.coefs.size(); i++){
+    for (int j = 0; j < bf2.coefs.size(); j++){
+      total += bf1.norm[i] * bf2.norm[j] * bf1.coefs[i] * bf2.coefs[j] * kinetic(bf1.origin, bf1.shell, bf1.exps[i], bf2.origin, bf2.shell, bf2.exps[j]);
+    }
+  }
+  return total;
+}
+
+Eigen::ArrayXXd Integrator::TMatrix(){
+  int aos = system.nCGFs;
+  Eigen::ArrayXXd retmat = Eigen::ArrayXXd(aos, aos);
+  for (int i = 0; i < aos; i++){
+    for (int j = 0; j < aos; j++){
+      retmat(i, j) = T(system.cgbfs[i], system.cgbfs[j]);
     }
   }
   return retmat;

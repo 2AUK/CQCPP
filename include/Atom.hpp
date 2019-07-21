@@ -20,9 +20,9 @@ class Atom
 {
 public:
   int z_val; /**< Atom number. */
-  Eigen::Array3f coord; /**< Cartesian coordinates. */
+  Eigen::Array3d coord; /**< Cartesian coordinates. */
   std::vector<BasisFunction> basisfunctions; /**< Vector containing BasisFunction objects for specific Atom. */
-  Atom(int, Eigen::Array3f);
+  Atom(int, Eigen::Array3d);
   void populate_basis(std::string in_basis); 
 private:
   std::vector<std::string> read_basis(std::string in_basis);

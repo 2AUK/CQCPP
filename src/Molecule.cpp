@@ -54,11 +54,11 @@ void Molecule::read_xyz(std::string inXYZ){
     std::vector<std::string> mollines = split(buffer.str(), '\n');
     natoms = std::stoi(mollines[0]);
     molecule_name = mollines[1];        
-    Eigen::Array3f coordinates;
+    Eigen::Array3d coordinates;
     for (auto it = mollines.begin()+2; it != mollines.end(); it++){
-      coordinates = Eigen::Array3f::Zero();
+      coordinates = Eigen::Array3d::Zero();
       std::vector<std::string> tok = split(*it, ' ');
-      coordinates << std::stof(tok[1]), std::stof(tok[2]), std::stod(tok[3]);
+      coordinates << std::stod(tok[1]), std::stod(tok[2]), std::stod(tok[3]);
       atoms.push_back(Atom(std::stoi(tok[0]), coordinates));
     }
   }

@@ -17,10 +17,10 @@ class BasisFunction
 {
 public:
   std::array<int,3> shell; /**< Cartesian Angular Momentum Shell. */
-  Eigen::ArrayXf norm; /**< Normalisation constant for orbital with values for each primitive gaussian function. */
-  Eigen::ArrayXf origin; /**< Orbital origin (essentially coordinates of atom). */
-  Eigen::ArrayXf exps; /**< Array of exponents of primitive gaussians of each basis function. */
-  Eigen::ArrayXf coefs; /**< Array of coefficients of primitive gaussians of each basis function. */
-  BasisFunction(std::array<int, 3>, Eigen::ArrayXf, Eigen::ArrayXf, Eigen::ArrayXf);
+  Eigen::ArrayXd norm; /**< Normalisation constant for orbital with values for each primitive gaussian function. */
+  Eigen::ArrayXd origin; /**< Orbital origin (essentially coordinates of atom). */
+  Eigen::ArrayXd exps; /**< Array of exponents of primitive gaussians of each basis function. */
+  Eigen::ArrayXd coefs; /**< Array of coefficients of primitive gaussians of each basis function. */
+  BasisFunction(std::array<int, 3>, Eigen::ArrayXd, Eigen::ArrayXd, Eigen::ArrayXd);
   void normalize();
 };
