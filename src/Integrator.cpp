@@ -44,10 +44,9 @@ double Integrator::E(int i, int j, int t, double Qx, double a, double b){
   } else if (t == 0 && i == 0 && j == 0){
     return exp(-q * Qx * Qx);
   } else if (j == 0){
-    return (1 / (2 * p)) * E(i-1, j, t-1, Qx, a, b) - ((q * Qx) / a) * E(i-1, j, t, Qx, a, b) + (t+1) * E(i-1, j, t+1, Qx, a, b);
+    return ((1 / (2 * p)) * E(i-1, j, t-1, Qx, a, b)) - ((q * Qx / a) * E(i-1, j, t, Qx, a, b)) + ((t+1) * E(i-1, j, t+1, Qx, a, b));
   } else {
-    return (1 / (2 * p)) * E(i, j-1, t-1, Qx, a, b) + ((q * Qx) / b) * E(i, j-1, t, Qx, a, b) + (t+1) * E(i, j-1, t+1, Qx, a, b);
-    
+    return ((1 / (2 * p)) * E(i, j-1, t-1, Qx, a, b)) + ((q * Qx / b) * E(i, j-1, t, Qx, a, b)) + ((t+1) * E(i, j-1, t+1, Qx, a, b));
   }
 }
 
@@ -68,7 +67,6 @@ double Integrator::overlap(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, 
   double p = a + b;
   int l1 = lmn1[0]; int m1 = lmn1[1]; int n1 = lmn1[2];
   int l2 = lmn2[0]; int m2 = lmn2[1]; int n2 = lmn2[2];
-
   double Sx = E(l1, l2, 0, A[0] - B[0], a, b);
   double Sy = E(m1, m2, 0, A[1] - B[1], a, b);
   double Sz = E(n1, n2, 0, A[2] - B[2], a, b);
@@ -103,7 +101,7 @@ double Integrator::S(BasisFunction bf1, BasisFunction bf2){
  */
 Eigen::ArrayXXd Integrator::SMatrix(){
   int aos = system.nCGFs;
-  Eigen::ArrayXXd retmat = Eigen::ArrayXXd(aos, aos);
+  Eigen::ArrayXXd retmat = Eigen::ArrayXXd::Zero(aos, aos);
   for (int i = 0; i < aos; i++){
     for (int j = 0; j < aos; j++){
       retmat(i, j) = S(system.cgbfs[i], system.cgbfs[j]);

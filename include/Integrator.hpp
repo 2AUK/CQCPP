@@ -19,7 +19,6 @@ public:
   Eigen::ArrayXXd VMatrix(); 
   Eigen::ArrayXd ERIMatrix();  
   Eigen::ArrayXXd JMatrix(); 
-private:
   double E(int, int, int, double, double, double); 
   double overlap(Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double); 
   double S(BasisFunction, BasisFunction);

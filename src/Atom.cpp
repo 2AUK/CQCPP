@@ -62,7 +62,7 @@ void Atom::populate_basis(std::string in_basis){
   std::vector<std::string> lines = split(atoms[z_val-1], '\n');
   bool firstLine = true;
   Eigen::ArrayXd expTemp;
-  Eigen::ArrayXd expSPTemp;
+  Eigen::ArrayXd coefSPTemp;
   Eigen::ArrayXd coefTemp;
   for (auto it = lines.begin(); it != lines.end(); it++){
     int primNum = 0;
@@ -84,19 +84,19 @@ void Atom::populate_basis(std::string in_basis){
     } else if (tokens[0] == "SP"){
       primNum = std::stoi(tokens[1]);
       expTemp = Eigen::ArrayXd::Zero(primNum);
-      expSPTemp = Eigen::ArrayXd::Zero(primNum);
+      coefSPTemp = Eigen::ArrayXd::Zero(primNum);
       coefTemp = Eigen::ArrayXd::Zero(primNum);
       for (int i = 1; i <= primNum; i++){
 	auto nx = std::next(it, i);
 	std::vector<std::string> toks = split(*nx, ' ');
 	expTemp[i-1] = std::stod(toks[0]);
 	coefTemp[i-1] = std::stod(toks[1]);
-	expSPTemp[i-1] = std::stod(toks[2]);
+	coefSPTemp[i-1] = std::stod(toks[2]);
       }
       basisfunctions.push_back(BasisFunction(std::experimental::make_array(0,0,0), coord, expTemp, coefTemp));
-      basisfunctions.push_back(BasisFunction(std::experimental::make_array(1,0,0), coord, expSPTemp, coefTemp));
-      basisfunctions.push_back(BasisFunction(std::experimental::make_array(0,1,0), coord, expSPTemp, coefTemp));
-      basisfunctions.push_back(BasisFunction(std::experimental::make_array(0,0,1), coord, expSPTemp, coefTemp));
+      basisfunctions.push_back(BasisFunction(std::experimental::make_array(1,0,0), coord, expTemp, coefSPTemp));
+      basisfunctions.push_back(BasisFunction(std::experimental::make_array(0,1,0), coord, expTemp, coefSPTemp));
+      basisfunctions.push_back(BasisFunction(std::experimental::make_array(0,0,1), coord, expTemp, coefSPTemp));
       std::advance(it, primNum);
     } else if (tokens[0] == "P"){
       primNum = std::stoi(tokens[1]);
