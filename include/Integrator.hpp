@@ -25,4 +25,5 @@ private:
   double S(BasisFunction, BasisFunction);
   double kinetic(Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double);
   double T(BasisFunction, BasisFunction);
+  double R(int, int, int, int,  Eigen::ArrayXd, double, double);
 };

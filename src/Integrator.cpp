@@ -1,6 +1,7 @@
 #include "Integrator.hpp"
 #include <math.h>
 #include <experimental/array>
+#include "utils.hpp"
 
 /**
  *   \file Integrator.cpp
@@ -156,4 +157,11 @@ Eigen::ArrayXXd Integrator::TMatrix(){
     }
   }
   return retmat;
+}
+
+double Integrator::R(int t, int u, int v, int n, Eigen::ArrayXd PC, double p, double RPC){
+  double value = 0.0
+  if (t == 0 && u == 0 && v == 0){
+    val += pow(-2 * p, n) * boys(n, p * RPC * RPC);
+  }
 }

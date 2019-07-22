@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <eigen3/Eigen/Core>
+#include <gsl/gsl_sf_hyperg.h>
 
 std::vector<std::string> split(const std::string& s, char delimiter){
   std::vector<std::string> tokens;
@@ -37,4 +38,12 @@ float binomial(float n, float k){
   } else {
     return factorial(n) / (factorial(k) * factorial(n - k));
   }
+}
+
+Eigen::ArrayXd GPC(double a, Eigen::ArrayXd A, double b, Eigen::ArrayXd B){
+  return (a * A + b * B) / (a+b);
+}
+
+double boys(double n, double T){
+  return gsl_sf_hyperg_1F1(n+0.5, n+1.5, -T) / (2.0*n + 1.0);
 }

@@ -13,3 +13,7 @@ float double_factorial(float n); //Calculates n!!
 float binomial(float n, float k); //Calculates binomials
 
 int te_index(int i, int j, int k, int l);
+
+Eigen::ArrayXd GPC(double, Eigen::ArrayXd, double, Eigen::ArrayXd);
+
+double boys(double, double);
