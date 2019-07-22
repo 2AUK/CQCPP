@@ -7,6 +7,10 @@ file (GLOB SOURCES "src/*.cpp")
 
 add_executable(scf ${SOURCES})
 
+set(EXTERNAL_LIBS cblas lapack gsl)
+
+target_link_libraries(scf ${EXTERNAL_LIBS})
+
 add_subdirectory(tests)
 option(BUILD_DOC "Build documentation" ON)
 find_package(Doxygen)

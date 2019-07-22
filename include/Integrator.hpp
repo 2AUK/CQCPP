@@ -26,4 +26,6 @@ private:
   double kinetic(Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double);
   double T(BasisFunction, BasisFunction);
   double R(int, int, int, int,  Eigen::ArrayXd, double, double);
+  double nuclear(Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd);
+  double V(BasisFunction, BasisFunction, Eigen::Array3d);
 };

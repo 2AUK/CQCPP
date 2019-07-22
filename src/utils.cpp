@@ -41,7 +41,7 @@ float binomial(float n, float k){
 }
 
 Eigen::ArrayXd GPC(double a, Eigen::ArrayXd A, double b, Eigen::ArrayXd B){
-  return (a * A + b * B) / (a+b);
+  return ((a * A) + (b * B)) / (a+b);
 }
 
 double boys(double n, double T){
