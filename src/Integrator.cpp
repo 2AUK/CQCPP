@@ -116,31 +116,25 @@ double Integrator::kinetic(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, 
   int l1 = lmn1[0]; int m1 = lmn1[1]; int n1 = lmn1[2];
   int l2 = lmn2[0]; int m2 = lmn2[1]; int n2 = lmn2[2];
 
-  // double p = a + b;
+  double p = a + b;
 
-  // double Sx = E(l1, l2, 0, A[0] - B[0], a, b);
-  // double Sy = E(m1, m2, 0, A[1] - B[1], a, b);
-  // double Sz = E(n1, n2, 0, A[2] - B[2], a, b);
+  double Sx = E(l1, l2, 0, A[0] - B[0], a, b);
+  double Sy = E(m1, m2, 0, A[1] - B[1], a, b);
+  double Sz = E(n1, n2, 0, A[2] - B[2], a, b);
 
-  // double Tx = (l2*(l2-1)*E(l1, l2-2, 0, A[0]-B[0], a, b)) - (2*b*(2*l2 + 1)*Sx) + (4*pow(b, 2)*E(l1, l2+2, 0, A[0]-B[0], a, b));
-  // Tx *= Sy * Sz;
+  double Tx = (l2*(l2-1)*E(l1, l2-2, 0, A[0]-B[0], a, b)) + (-2*b*(2*l2 + 1)*Sx) + (4*b*b*E(l1, l2+2, 0, A[0]-B[0], a, b));
+  Tx *= Sy;
+  Tx *= Sz;
 
-  // double Ty = (m2*(m2-1)*E(m1, m2-2, 0, A[1]-B[1], a, b)) - (2*b*(2*m2 + 1)*Sy) + (4*pow(b, 2)*E(m1, m2+2, 0, A[1]-B[1], a, b));
-  // Ty *= Sx * Sz;
+  double Ty = (m2*(m2-1)*E(m1, m2-2, 0, A[1]-B[1], a, b)) + (-2*b*(2*m2 + 1)*Sy) + (4*b*b*E(m1, m2+2, 0, A[1]-B[1], a, b));
+  Ty *= Sx;
+  Ty *= Sz;
 
-  // double Tz = (n2*(n2-1)*E(n1, n2-2, 0, A[2]-B[2], a, b)) - (2*b*(2*n2 + 1)*Sz) + (4*pow(b, 2)*E(n1, n2+2, 0, A[2]-B[2], a, b));
-  // Tz *= Sy * Sx;
-  double term0 = b*(2*(l2+m2+n2)+3)*\
-    overlap(A, std::experimental::make_array(l1, m1, n1), a, B, std::experimental::make_array(l2,m2,n2),b);
-  double term1 = -2*pow(b,2)*\
-    (overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2+2,m2,n2),b) +
-     overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2,m2+2,n2),b) +
-     overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2,m2,n2+2),b));
-  double term2 = -0.5*(l2*(l2-1)*overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2-2,m2,n2),b) +
-		       m2*(m2-1)*overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2,m2-2,n2),b) +
-		       n2*(n2-1)*overlap(A,std::experimental::make_array(l1,m1,n1),a,B,std::experimental::make_array(l2,m2,n2-2),b));
-  return term0 + term1 +term2;
-  // return -0.5 ( Tx * Ty * Tz * pow(M_PI/p, 1.5));
+  double Tz = (n2*(n2-1)*E(n1, n2-2, 0, A[2]-B[2], a, b)) + (-2*b*(2*n2 + 1)*Sz) + (4*b*b*E(n1, n2+2, 0, A[2]-B[2], a, b));
+  Tz *= Sy;
+  Tz *= Sx;
+  
+  return -0.5 * (Tx + Ty + Tz) *  pow(M_PI/p, 1.5);
 }
 
 double Integrator::T(BasisFunction bf1, BasisFunction bf2){
