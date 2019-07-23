@@ -175,17 +175,20 @@ double Integrator::R(int t, int u, int v, int n, Eigen::ArrayXd PC, double p, do
   if (t == 0 && u == 0 && v == 0){
     val += pow(-2 * p, n) * boys(n, p * RPC * RPC);
   } else if(t == 0 && u == 0){
-    if (v > 1)
+    if (v > 1){
       val += (v-1)*R(t, u, v-2, n+1, PC, p, RPC);
-    val += PC[2] * R(t, u, v, n+1, PC, p, RPC);
+    }
+    val += PC[2] * R(t, u, v-1, n+1, PC, p, RPC);
   } else if(t == 0){
-    if (u > 1)
+    if (u > 1){
       val +=(u-1)*R(t, u-2, v, n+1, PC, p, RPC);
-    val += PC[1] * R(t, u, v, n+1, PC, p, RPC);
+    }
+    val += PC[1] * R(t, u-1, v, n+1, PC, p, RPC);
   } else {
-    if (t > 1)
+    if (t > 1){
       val += (t-1)*R(t-2, u, v, n+1, PC, p, RPC);
-    val += PC[0] * R(t, u, v, n+1, PC, p, RPC);
+    }
+    val += PC[0] * R(t-1, u, v, n+1, PC, p, RPC);
   }
   return val;
 }
@@ -194,17 +197,17 @@ double Integrator::nuclear(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, 
   double p = a+b;
   Eigen::ArrayXd P = GPC(a, A, b, B);
   double RPC = (P - C).matrix().norm();
-
   int l1 = lmn1[0]; int m1 = lmn1[1]; int n1 = lmn1[2];
   int l2 = lmn2[0]; int m2 = lmn2[1]; int n2 = lmn2[2];
   double val = 0.0;
   for (int t = 0; t < l1 + l2 + 1; t++){
     for (int u = 0; u < m1 + m2 + 1; u++){
       for (int v = 0; v < n1 + n2 + 1; v++){
-	val += E(l1, l2, t, A[0] - B[0], a, b) *
+	val +=
+	  E(l1, l2, t, A[0] - B[0], a, b) *
 	  E(m1, m2, u, A[1] - B[1], a, b) *
 	  E(n1, n2, v, A[2] - B[2], a, b) *
-	  R(t, u, v, 0, P, p, RPC);
+	  R(t, u, v, 0, P-C, p, RPC);
       }
     }
   }
@@ -212,7 +215,7 @@ double Integrator::nuclear(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, 
   return val;
 }
 
-double Integrator::V(BasisFunction bf1, BasisFunction bf2, Eigen::Array3d C){
+double Integrator::V(BasisFunction bf1, BasisFunction bf2, Eigen::ArrayXd C){
   double total = 0;
   for (int i = 0; i < bf1.coefs.size(); i++){
     for (int j = 0; j < bf2.coefs.size(); j++){
@@ -228,7 +231,7 @@ Eigen::ArrayXXd Integrator::VMatrix(){
   for (int i = 0; i < aos; i++){
     for (int j = 0; j < aos; j++){
       for(auto atom: system.atoms){
-	retmat(i, j) += -atom.z_val * V(system.cgbfs[i], system.cgbfs[j], atom.coord);
+	retmat(i, j) += -1 * atom.z_val * V(system.cgbfs[i], system.cgbfs[j], atom.coord);
       }
     }
   }
