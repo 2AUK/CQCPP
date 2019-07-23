@@ -14,6 +14,8 @@ float binomial(float n, float k); //Calculates binomials
 
 int te_index(int i, int j, int k, int l);
 
-Eigen::ArrayXd GPC(double, Eigen::ArrayXd, double, Eigen::ArrayXd);
+Eigen::Array3d GPC(double, Eigen::Array3d, double, Eigen::Array3d);
 
 double boys(double, double);
+
+double norm(Eigen::Array3d, Eigen::Array3d);

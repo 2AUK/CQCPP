@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 #include <sstream>
 #include <eigen3/Eigen/Core>
 #include <gsl/gsl_sf_hyperg.h>
@@ -40,10 +41,21 @@ float binomial(float n, float k){
   }
 }
 
-Eigen::ArrayXd GPC(double a, Eigen::ArrayXd A, double b, Eigen::ArrayXd B){
-  return ((a*A) + (b*B)) / (a+b);
+Eigen::Array3d GPC(double a, Eigen::Array3d A, double b, Eigen::Array3d B){
+  double p = a+b;
+  double x = ((a * A[0]) + (B[0] * b)) / p;
+  double y = ((a * A[1]) + (B[1] * b)) / p;
+  double z = ((a * A[2]) + (B[2] * b)) / p;
+
+  Eigen::Array3d ret;
+  ret << x, y, z;
+  return ret;
 }
 
 double boys(double n, double T){
   return gsl_sf_hyperg_1F1(n+0.5, n+1.5, -T) / (2.0*n + 1.0);
+}
+
+double norm(Eigen::Array3d A, Eigen::Array3d B){
+  return std::sqrt(pow(A[0] - B[0], 2) + pow(A[1] - B[1], 2) + pow(A[2] - B[2], 2));
 }

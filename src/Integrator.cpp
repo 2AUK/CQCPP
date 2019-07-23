@@ -65,8 +65,8 @@ double Integrator::E(int i, int j, int t, double Qx, double a, double b){
 double Integrator::overlap(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, Eigen::ArrayXd B, std::array<int, 3> lmn2, double b){
   
   double p = a + b;
-  int l1 = lmn1[0]; int m1 = lmn1[1]; int n1 = lmn1[2];
-  int l2 = lmn2[0]; int m2 = lmn2[1]; int n2 = lmn2[2];
+  const int l1 = lmn1[0]; const int m1 = lmn1[1]; const int n1 = lmn1[2];
+  const int l2 = lmn2[0]; const int m2 = lmn2[1]; const int n2 = lmn2[2];
   double Sx = E(l1, l2, 0, A[0] - B[0], a, b);
   double Sy = E(m1, m2, 0, A[1] - B[1], a, b);
   double Sz = E(n1, n2, 0, A[2] - B[2], a, b);
@@ -112,8 +112,8 @@ Eigen::ArrayXXd Integrator::SMatrix(){
 
 
 double Integrator::kinetic(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, Eigen::ArrayXd B, std::array<int, 3> lmn2, double b){
-  int l1 = lmn1[0]; int m1 = lmn1[1]; int n1 = lmn1[2];
-  int l2 = lmn2[0]; int m2 = lmn2[1]; int n2 = lmn2[2];
+  const int l1 = lmn1[0]; const int m1 = lmn1[1]; const int n1 = lmn1[2];
+  const int l2 = lmn2[0]; const int m2 = lmn2[1]; const int n2 = lmn2[2];
 
   double p = a + b;
 
@@ -157,7 +157,7 @@ Eigen::ArrayXXd Integrator::TMatrix(){
   return retmat;
 }
 
-double Integrator::R(int t, int u, int v, int n, Eigen::ArrayXd PC, double p, double RPC){
+double Integrator::R(int t, int u, int v, int n, double PCx, double PCy, double PCz, double p, double RPC){
   double val = 0.0;
   // if (t == 0 && u == 0 && v == 0){
   //   val += pow(-2 * p, n) * boys(n, p * RPC * RPC);
@@ -176,29 +176,29 @@ double Integrator::R(int t, int u, int v, int n, Eigen::ArrayXd PC, double p, do
     val += pow(-2 * p, n) * boys(n, p * RPC * RPC);
   } else if(t == 0 && u == 0){
     if (v > 1){
-      val += (v-1)*R(t, u, v-2, n+1, PC, p, RPC);
+      val += (v-1)*R(t, u, v-2, n+1, PCx, PCy, PCz, p, RPC);
     }
-    val += PC[2] * R(t, u, v-1, n+1, PC, p, RPC);
+    val += PCz * R(t, u, v-1, n+1, PCx, PCy, PCz, p, RPC);
   } else if(t == 0){
     if (u > 1){
-      val +=(u-1)*R(t, u-2, v, n+1, PC, p, RPC);
+      val +=(u-1)*R(t, u-2, v, n+1, PCx, PCy, PCz, p, RPC);
     }
-    val += PC[1] * R(t, u-1, v, n+1, PC, p, RPC);
+    val += PCy * R(t, u-1, v, n+1, PCx, PCy, PCz, p, RPC);
   } else {
     if (t > 1){
-      val += (t-1)*R(t-2, u, v, n+1, PC, p, RPC);
+      val += (t-1)*R(t-2, u, v, n+1, PCx, PCy, PCz, p, RPC);
     }
-    val += PC[0] * R(t-1, u, v, n+1, PC, p, RPC);
+    val += PCx * R(t-1, u, v, n+1, PCx, PCy, PCz, p, RPC);
   }
   return val;
 }
 
 double Integrator::nuclear(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, Eigen::ArrayXd B, std::array<int, 3> lmn2, double b, Eigen::ArrayXd C){
   double p = a+b;
-  Eigen::ArrayXd P = GPC(a, A, b, B);
-  double RPC = (P - C).matrix().norm();
-  int l1 = lmn1[0]; int m1 = lmn1[1]; int n1 = lmn1[2];
-  int l2 = lmn2[0]; int m2 = lmn2[1]; int n2 = lmn2[2];
+  Eigen::Array3d P = GPC(a, A, b, B);
+  double RPC = (P-C).matrix().norm();
+  const int l1 = lmn1[0]; const int m1 = lmn1[1]; const int n1 = lmn1[2];
+  const int l2 = lmn2[0]; const int m2 = lmn2[1]; const int n2 = lmn2[2];
   double val = 0.0;
   for (int t = 0; t < l1 + l2 + 1; t++){
     for (int u = 0; u < m1 + m2 + 1; u++){
@@ -207,16 +207,16 @@ double Integrator::nuclear(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, 
 	  E(l1, l2, t, A[0] - B[0], a, b) *
 	  E(m1, m2, u, A[1] - B[1], a, b) *
 	  E(n1, n2, v, A[2] - B[2], a, b) *
-	  R(t, u, v, 0, P-C, p, RPC);
+	  R(t, u, v, 0, P[0]-C[0], P[1]-C[1], P[2]-C[2], p, RPC);
       }
     }
   }
-  val *= ((2 * M_PI) / p);
+  val *= (2 * M_PI / p);
   return val;
 }
 
-double Integrator::V(BasisFunction bf1, BasisFunction bf2, Eigen::ArrayXd C){
-  double total = 0;
+double Integrator::V(BasisFunction bf1, BasisFunction bf2, Eigen::Array3d C){
+  double total = 0.0;
   for (int i = 0; i < bf1.coefs.size(); i++){
     for (int j = 0; j < bf2.coefs.size(); j++){
       total += bf1.norm[i] * bf2.norm[j] * bf1.coefs[i] * bf2.coefs[j] * nuclear(bf1.origin, bf1.shell, bf1.exps[i], bf2.origin, bf2.shell, bf2.exps[j], C);
@@ -227,11 +227,11 @@ double Integrator::V(BasisFunction bf1, BasisFunction bf2, Eigen::ArrayXd C){
 
 Eigen::ArrayXXd Integrator::VMatrix(){
   int aos = system.nCGFs;
-  Eigen::ArrayXXd retmat = Eigen::ArrayXXd(aos, aos);
+  Eigen::ArrayXXd retmat = Eigen::ArrayXXd::Zero(aos, aos);
   for (int i = 0; i < aos; i++){
     for (int j = 0; j < aos; j++){
-      for(auto atom: system.atoms){
-	retmat(i, j) += -1 * atom.z_val * V(system.cgbfs[i], system.cgbfs[j], atom.coord);
+      for(auto &atom: system.atoms){
+	retmat(i, j) += -atom.z_val * V(system.cgbfs[i], system.cgbfs[j], atom.coord);
       }
     }
   }
