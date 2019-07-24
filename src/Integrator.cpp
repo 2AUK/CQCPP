@@ -3,6 +3,9 @@
 #include <experimental/array>
 #include "utils.hpp"
 
+#define INDEX(i, j) i>j ? i*(i+1)/2 + j : j*(j+1)/2 + i
+
+
 /**
  *   \file Integrator.cpp
  *   \brief Implementation for Integrator
@@ -235,5 +238,106 @@ Eigen::ArrayXXd Integrator::VMatrix(){
       }
     }
   }
+  return retmat;
+}
+
+double Integrator::electron(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a,
+			    Eigen::ArrayXd B, std::array<int, 3> lmn2, double b,
+			    Eigen::ArrayXd C, std::array<int, 3> lmn3, double c,
+			    Eigen::ArrayXd D, std::array<int, 3> lmn4, double d){
+  const int l1 = lmn1[0]; const int m1 = lmn1[1]; const int n1 = lmn1[2];
+  const int l2 = lmn2[0]; const int m2 = lmn2[1]; const int n2 = lmn2[2];
+  const int l3 = lmn3[0]; const int m3 = lmn3[1]; const int n3 = lmn3[2];
+  const int l4 = lmn4[0]; const int m4 = lmn4[1]; const int n4 = lmn4[2];
+  Eigen::Array3d P = GPC(a, A, b, B);
+  Eigen::Array3d Q = GPC(c, C, d, D);
+  double RPQ = (P-Q).matrix().norm();
+  double p = a+b;
+  double q = c+d;
+  double alpha = (p*q) / (p+q);
+  double val = 0.0;
+  for (int t = 0; t < l1 + l2 + 1; t++){
+    for (int u = 0; u < m1 + m2 + 1; u++){
+      for (int v = 0; v < n1 + n2 + 1; v++){
+	for (int td = 0; td < l3 + l4 + 1; td++){
+	  for (int ud = 0; ud < m3 + m4 + 1; ud++){
+	    for (int vd = 0; vd < n3 + n4 + 1; vd++){
+	      val += E(l1, l2, t, A[0] - B[0], a, b) *
+		E(m1, m2, u, A[1] - B[1], a, b) *
+		E(n1, n2, v, A[2] - B[2], a, b) *
+		E(l3, l4, td, C[0] - D[0], c, d) *
+		E(m3, m4, ud, C[1] - D[1], c, d) *
+		E(n3, n4, vd, C[2] - D[2], c, d) *
+		std::pow(-1, td + ud + vd) *
+		R(t+td, u+ud, v+vd, 0, P[0] - Q[0], P[1] - Q[1], P[2] - Q[2], alpha, RPQ);
+	    }
+	  }
+	}
+      }
+    }
+  }
+  val *= (2 *std::pow(M_PI, 2.5)) / (p*q*sqrt(p+q));
+  return val;
+}
+
+double Integrator::ERI(BasisFunction bf1, BasisFunction bf2, BasisFunction bf3, BasisFunction bf4){
+  double total = 0.0;
+  for (int i = 0; i < bf1.coefs.size(); i++){
+    for (int j = 0; j < bf2.coefs.size(); j++){
+      for (int k = 0; k < bf3.coefs.size(); k++){
+	for (int l = 0; l < bf4.coefs.size(); l++){
+	  total +=
+	    bf1.norm[i] * bf2.norm[j] * bf3.norm[k] * bf4.norm[l] *
+	    bf1.coefs[i] * bf2.coefs[j] * bf3.coefs[k] * bf4.coefs[l] *
+	    electron(bf1.origin, bf1.shell, bf1.exps[i],
+		     bf2.origin, bf2.shell, bf2.exps[j],
+		     bf3.origin, bf3.shell, bf3.exps[k],
+		     bf4.origin, bf4.shell, bf4.exps[l]);
+	}
+      }
+    }
+  }
+  return total;
+}
+
+Eigen::ArrayXd Integrator::ERIMatrix(){
+  int aos = system.nCGFs;
+  int size = (aos * (aos+1) * (std::pow(aos, 2) + aos + 2)) / 8;
+  Eigen::ArrayXd retmat = Eigen::ArrayXd::Zero(size);
+  int lcount = 0;
+  for (int i = 0; i < aos; i++){
+    for (int j = 0; j <= i; j++){
+      int ij = i*(i+1)/2 + j;
+      for (int k = 0; k < aos; k++){
+  	for (int l = 0; l <= k; l++){
+  	  int kl = k * (k+1)/2+l;
+	  double val = ERI(system.cgbfs[i],
+			   system.cgbfs[j],
+			   system.cgbfs[k],
+			   system.cgbfs[l]);
+  	  if (i >= j && k >= l && ij >= kl && std::abs(val) > 1E-15){
+  	    int ijkl = te_index(i, j, k, l);
+  	    // int jikl = te_index(j, i, k, l);
+  	    // int ijlk = te_index(i, j, l, k);
+  	    // int jilk = te_index(j, i, l, k);
+  	    // int klij = te_index(k, l, i, j);
+  	    // int lkij = te_index(l, k, i, j);
+  	    // int klji = te_index(k, l, j, i);
+  	    // int lkji = te_index(l, k, j, i);
+	    std::cout << i+1 << " " << j+1 << " " << k+1 << " " << l+1 << " "<< ijkl << " "  << val << std::endl;
+	    lcount++;
+  	    // retmat(jikl) = val;
+  	    // retmat(ijlk) = val;
+  	    // retmat(jilk) = val;
+  	    // retmat(klij) = val;
+  	    // retmat(lkij) = val;
+  	    // retmat(klji) = val;
+  	    // retmat(lkji) = val;
+  	  }
+  	}
+      }
+    }
+  }
+  std::cout << lcount << std::endl;
   return retmat;
 }

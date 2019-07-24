@@ -52,6 +52,12 @@ Eigen::Array3d GPC(double a, Eigen::Array3d A, double b, Eigen::Array3d B){
   return ret;
 }
 
+void swap(int &i, int &j){
+  int m = i;
+  i = j;
+  j = m;
+}
+
 double boys(double n, double T){
   return gsl_sf_hyperg_1F1(n+0.5, n+1.5, -T) / (2.0*n + 1.0);
 }
@@ -59,3 +65,23 @@ double boys(double n, double T){
 double norm(Eigen::Array3d A, Eigen::Array3d B){
   return std::sqrt(pow(A[0] - B[0], 2) + pow(A[1] - B[1], 2) + pow(A[2] - B[2], 2));
 }
+
+int te_index(int i, int j, int k, int l){
+  if (i < j){
+    swap(i, j);
+  }
+  if (k < l){
+    swap(k, l);
+  }
+
+  int ij = i * (i + 1) / 2 + j;
+  int kl = k * (k + 1) / 2 + l;
+
+  if(ij < kl){
+    swap(ij, kl);
+  }
+
+  return ij * (ij + 1) / 2 + kl;
+}
+
+

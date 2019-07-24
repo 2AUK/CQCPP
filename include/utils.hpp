@@ -19,3 +19,7 @@ Eigen::Array3d GPC(double, Eigen::Array3d, double, Eigen::Array3d);
 double boys(double, double);
 
 double norm(Eigen::Array3d, Eigen::Array3d);
+
+int te_index(int, int, int, int);
+
+void swap(int&, int&);

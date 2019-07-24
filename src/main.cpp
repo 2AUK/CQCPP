@@ -7,7 +7,7 @@
 #include <eigen3/Eigen/Core>
 
 int main(){
-  std::string input_file = "/home/abdullah/Code/C++/SCF/examples/h20.dat";
+  std::string input_file = "/home/abdullah/Code/C++/SCF/examples/H2.xyz";
   std::string input_basis = "/home/abdullah/Code/C++/SCF/basis_sets/sto3g.dat";
   Molecule water(input_file, input_basis);
   std::cout << water.molecule_name << '\n';
@@ -23,6 +23,8 @@ int main(){
   std::cout << isys.SMatrix() << std::endl;
   std::cout << isys.TMatrix() << std::endl;
   std::cout << isys.VMatrix() << std::endl;
+  //std::cout << isys.ERIMatrix() << std::endl;
+  isys.ERIMatrix();
   std::cout << "Number of GTOS:\t" << water.nGTOs << std::endl;
   std::cout << "Number of CGFs:\t" << water.nCGFs << std::endl;
 }

@@ -18,7 +18,8 @@ public:
   Eigen::ArrayXXd TMatrix(); 
   Eigen::ArrayXXd VMatrix(); 
   Eigen::ArrayXd ERIMatrix();  
-  Eigen::ArrayXXd JMatrix(); 
+  Eigen::ArrayXXd JMatrix();
+private:
   double E(int, int, int, double, double, double); 
   double overlap(Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double); 
   double S(BasisFunction, BasisFunction);
@@ -27,4 +28,6 @@ public:
   double R(int, int, int, int, double, double, double, double, double);
   double nuclear(Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd);
   double V(BasisFunction, BasisFunction, Eigen::Array3d);
+  double electron(Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double, Eigen::ArrayXd, std::array<int, 3>, double);
+  double ERI(BasisFunction, BasisFunction, BasisFunction, BasisFunction);
 };
