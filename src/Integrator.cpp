@@ -311,11 +311,8 @@ Eigen::ArrayXd Integrator::ERIMatrix(){
       for (int k = 0; k < aos; k++){
   	for (int l = 0; l <= k; l++){
   	  int kl = k * (k+1)/2+l;
-	  double val = ERI(system.cgbfs[i],
-			   system.cgbfs[j],
-			   system.cgbfs[k],
-			   system.cgbfs[l]);
-  	  if (i >= j && k >= l && ij >= kl && std::abs(val) > 1E-15){
+
+  	  if (ij >= kl){
   	    int ijkl = te_index(i, j, k, l);
   	    // int jikl = te_index(j, i, k, l);
   	    // int ijlk = te_index(i, j, l, k);
@@ -324,7 +321,13 @@ Eigen::ArrayXd Integrator::ERIMatrix(){
   	    // int lkij = te_index(l, k, i, j);
   	    // int klji = te_index(k, l, j, i);
   	    // int lkji = te_index(l, k, j, i);
-	    std::cout << i+1 << " " << j+1 << " " << k+1 << " " << l+1 << " "<< ijkl << " "  << val << std::endl;
+	    // This set up pretty much gets you what the crawdad project gives you
+	    double val = ERI(system.cgbfs[i],
+			     system.cgbfs[j],
+			     system.cgbfs[k],
+			     system.cgbfs[l]);
+	    std::cout << i+1 << " " << j+1 << " " << k+1 << " " << l+1 << " " << ijkl << " "  << val << std::endl;
+
 	    lcount++;
   	    // retmat(jikl) = val;
   	    // retmat(ijlk) = val;
