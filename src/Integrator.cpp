@@ -321,7 +321,6 @@ Eigen::ArrayXd Integrator::ERIMatrix(){
   	    // int lkij = te_index(l, k, i, j);
   	    // int klji = te_index(k, l, j, i);
   	    // int lkji = te_index(l, k, j, i);
-	    // This set up pretty much gets you what the crawdad project gives you
 	    double val = ERI(system.cgbfs[i],
 			     system.cgbfs[j],
 			     system.cgbfs[k],

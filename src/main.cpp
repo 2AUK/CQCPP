@@ -5,6 +5,7 @@
 #include "Integrator.hpp"
 #include "utils.hpp"
 #include <eigen3/Eigen/Core>
+#include "HF.hpp"
 
 int main(){
   std::string input_file = "/home/abdullah/Code/C++/SCF/examples/h20.dat";
@@ -19,12 +20,8 @@ int main(){
       std::cout << "Basisfunction Shell:\t" << l << m << n << "\nExponents:\n" << std::setprecision(10) << bf.exps << "\nCoefficients:\n" << std::setprecision(10) << bf.coefs << "\nOrigin:\n" << std::setprecision(10) << bf.origin << "\nNorm:\n"<< std::setprecision(10)  << bf.norm << '\n';
     }
   }
-  Integrator isys(water);
-  std::cout << isys.SMatrix() << std::endl;
-  std::cout << isys.TMatrix() << std::endl;
-  std::cout << isys.VMatrix() << std::endl;
-  //std::cout << isys.ERIMatrix() << std::endl;
-  isys.ERIMatrix();
+  HF hf(water);
+  hf.initialise();
   std::cout << "Number of GTOS:\t" << water.nGTOs << std::endl;
   std::cout << "Number of CGFs:\t" << water.nCGFs << std::endl;
 }
