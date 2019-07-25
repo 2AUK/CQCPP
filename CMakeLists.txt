@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(SCF)
 include(CTest)
-set(CMAKE_CXX_FLAGS "-g -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-g3 -Wall -Wextra")
 include_directories(include)
 file (GLOB SOURCES "src/*.cpp")
 
