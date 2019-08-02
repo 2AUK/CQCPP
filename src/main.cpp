@@ -8,16 +8,16 @@
 #include "HF.hpp"
 
 int main(){
+  Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "[", "]");
   std::string input_file = "/home/abdullah/Code/C++/SCF/examples/h20.dat";
-  std::string input_basis = "/home/abdullah/Code/C++/SCF/basis_sets/sto3g.dat";
+  std::string input_basis = "/home/abdullah/Code/C++/SCF/basis_sets/631g.dat";
   Molecule water(input_file, input_basis);
   std::cout << water.molecule_name << '\n';
   for (const auto atom: water.atoms){
-    std::cout << "\nAtomic Number:\t" << atom.z_val << "\nCoordinates:\n" << atom.coord << '\n';
-    std::cout << "\nBasisfunction details\n";
+    std::cout << atom.z_val << "\t"  << atom.coord.format(CommaInitFmt) << '\n';
     for (const auto bf: atom.basisfunctions){
       int l = bf.shell[0]; int m = bf.shell[1]; int n = bf.shell[2];
-      std::cout << "Basisfunction Shell:\t" << l << m << n << "\nExponents:\n" << std::setprecision(10) << bf.exps << "\nCoefficients:\n" << std::setprecision(10) << bf.coefs << "\nOrigin:\n" << std::setprecision(10) << bf.origin << "\nNorm:\n"<< std::setprecision(10)  << bf.norm << '\n';
+      std::cout << "[" << l << ", " << m << ", "  << n << "]\t" << std::setprecision(10) << bf.exps.format(CommaInitFmt) << '\t' << bf.coefs.format(CommaInitFmt) << '\t' << bf.origin.format(CommaInitFmt) << '\t' << bf.norm.format(CommaInitFmt) << '\n';
     }
   }
   HF hf(water);

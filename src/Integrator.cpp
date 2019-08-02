@@ -44,12 +44,12 @@ double Integrator::E(int i, int j, int t, double Qx, double a, double b){
   double q = (a * b) / p;
   if (t < 0 || t > (i + j)){
     return 0.0;
-  } else if (t == 0 && i == 0 && j == 0){
+  } else if (i + j + t == 0){
     return exp(-q * Qx * Qx);
   } else if (j == 0){
-    return ((1 / (2 * p)) * E(i-1, j, t-1, Qx, a, b)) - ((q * Qx / a) * E(i-1, j, t, Qx, a, b)) + ((t+1) * E(i-1, j, t+1, Qx, a, b));
+    return ((0.5/p) * E(i-1, j, t-1, Qx, a, b)) - ((q * Qx / a) * E(i-1, j, t, Qx, a, b)) + ((t+1) * E(i-1, j, t+1, Qx, a, b));
   } else {
-    return ((1 / (2 * p)) * E(i, j-1, t-1, Qx, a, b)) + ((q * Qx / b) * E(i, j-1, t, Qx, a, b)) + ((t+1) * E(i, j-1, t+1, Qx, a, b));
+    return ((0.5/p) * E(i, j-1, t-1, Qx, a, b)) + ((q * Qx / b) * E(i, j-1, t, Qx, a, b)) + ((t+1) * E(i, j-1, t+1, Qx, a, b));
   }
 }
 
@@ -65,6 +65,7 @@ double Integrator::E(int i, int j, int t, double Qx, double a, double b){
  *  \param b Exponent for second primitive gaussian
  *  \return Value of the overlap between two primitive gaussians
  */
+
 double Integrator::overlap(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, Eigen::ArrayXd B, std::array<int, 3> lmn2, double b){
   
   double p = a + b;
@@ -87,7 +88,7 @@ double Integrator::overlap(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, 
  */
 
 double Integrator::S(BasisFunction bf1, BasisFunction bf2){
-  double total = 0;
+  double total = 0.0;
   for (int i = 0; i < bf1.coefs.size(); i++){
     for (int j = 0; j < bf2.coefs.size(); j++){
       total += bf1.norm[i] * bf2.norm[j] * bf1.coefs[i] * bf2.coefs[j] * overlap(bf1.origin, bf1.shell, bf1.exps[i], bf2.origin, bf2.shell, bf2.exps[j]);
@@ -304,14 +305,12 @@ Eigen::ArrayXd Integrator::ERIMatrix(){
   int aos = system.nCGFs;
   int size = (aos * (aos+1) * (std::pow(aos, 2) + aos + 2)) / 8;
   Eigen::ArrayXd retmat = Eigen::ArrayXd::Zero(size);
-  int lcount = 0;
   for (int i = 0; i < aos; i++){
     for (int j = 0; j <= i; j++){
       int ij = i*(i+1)/2 + j;
       for (int k = 0; k < aos; k++){
   	for (int l = 0; l <= k; l++){
   	  int kl = k * (k+1)/2+l;
-
   	  if (ij >= kl){
   	    int ijkl = te_index(i, j, k, l);
   	    // int jikl = te_index(j, i, k, l);
@@ -325,9 +324,7 @@ Eigen::ArrayXd Integrator::ERIMatrix(){
 			     system.cgbfs[j],
 			     system.cgbfs[k],
 			     system.cgbfs[l]);
-	    std::cout << i+1 << " " << j+1 << " " << k+1 << " " << l+1 << " " << ijkl << " "  << val << std::endl;
-
-	    lcount++;
+	    retmat[ijkl] = val;
   	    // retmat(jikl) = val;
   	    // retmat(ijlk) = val;
   	    // retmat(jilk) = val;
@@ -340,6 +337,5 @@ Eigen::ArrayXd Integrator::ERIMatrix(){
       }
     }
   }
-  std::cout << lcount << std::endl;
   return retmat;
 }

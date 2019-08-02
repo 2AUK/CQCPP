@@ -9,6 +9,8 @@ void HF::initialise(){
   S = isys.SMatrix();
   T = isys.TMatrix();
   V = isys.VMatrix();
+  ERI = isys.ERIMatrix();
+  std::cout << S << '\n';
   H = T + V;
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> es(S.matrix());
   O = es.operatorInverseSqrt();
@@ -29,7 +31,7 @@ void HF::initialise(){
       }
     }
   }
-  double E_e = (P * (H + H)).sum();
+  double E_e = (P * (H + F)).sum();
   std::cout << E_e << '\n';
   nuc_rep = nuclear_repulsion();
   std::cout << nuc_rep << '\n';
@@ -44,4 +46,8 @@ double HF::nuclear_repulsion(){
     }
   }
   return total;
+}
+
+void HF::step(){
+
 }
