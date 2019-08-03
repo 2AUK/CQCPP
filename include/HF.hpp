@@ -4,14 +4,20 @@
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Eigenvalues>
 #include <iostream>
+#include <iomanip>
 
 class HF{
 public:
   HF(Molecule&);
   Molecule system;
   double nuc_rep;
-  double current_energy;
-  double new_energy;
+  double current_Ee;
+  double current_Et;
+  double new_Ee;
+  double new_Et;
+  double delta_E = 1E20;
+  double RMS = 1E20;
+  int Nelec;
   Eigen::ArrayXXd S;
   Eigen::ArrayXXd T;
   Eigen::ArrayXXd V;
@@ -23,7 +29,7 @@ public:
   Eigen::ArrayXXd F;
   Eigen::ArrayXXd Fnew;
   void initialise();
-  void run();
+  void run(double, double, int=100);
 private:
   void step();
   double nuclear_repulsion();

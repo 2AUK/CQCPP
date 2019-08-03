@@ -2,6 +2,10 @@
 #include "utils.hpp"
 #include <cmath>
 #include <eigen3/Eigen/Core>
+#include <ostream>
+#include <iomanip>
+
+Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "[", "]");
 
 /**
  *   \file BasisFunc.cpp
@@ -62,4 +66,14 @@ void BasisFunction::normalize(){
   for (int k = 0; k < nexps; k++){
     coefs[k] *= N;
   }
+}
+
+std::ostream& operator<<(std::ostream& stream, const BasisFunction& bf){
+  stream << bf.exps.format(CommaInitFmt) << std::setw(3)
+	 << "[" << bf.shell[0]
+	 << ", " << bf.shell[1]
+	 << ", " << bf.shell[2] << "]" << std::setw(3)
+	 << bf.coefs.format(CommaInitFmt) << std::setw(3)
+	 << bf.norm.format(CommaInitFmt) << std::endl;
+  return stream;
 }

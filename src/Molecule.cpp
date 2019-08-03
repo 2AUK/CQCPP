@@ -59,6 +59,7 @@ void Molecule::read_xyz(std::string inXYZ){
       coordinates = Eigen::Array3d::Zero();
       std::vector<std::string> tok = split(*it, ' ');
       coordinates << std::stod(tok[1]), std::stod(tok[2]), std::stod(tok[3]);
+      //coordinates << std::stod(tok[1])/0.52917721092, std::stod(tok[2])/0.52917721092, std::stod(tok[3])/0.52917721092;
       atoms.push_back(Atom(std::stoi(tok[0]), coordinates));
     }
   }

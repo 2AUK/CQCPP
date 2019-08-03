@@ -89,9 +89,11 @@ double Integrator::overlap(Eigen::ArrayXd A, std::array<int, 3> lmn1, double a, 
 
 double Integrator::S(BasisFunction bf1, BasisFunction bf2){
   double total = 0.0;
+  double val = 0.0;
   for (int i = 0; i < bf1.coefs.size(); i++){
     for (int j = 0; j < bf2.coefs.size(); j++){
-      total += bf1.norm[i] * bf2.norm[j] * bf1.coefs[i] * bf2.coefs[j] * overlap(bf1.origin, bf1.shell, bf1.exps[i], bf2.origin, bf2.shell, bf2.exps[j]);
+      val = bf1.norm[i] * bf2.norm[j] * bf1.coefs[i] * bf2.coefs[j] * overlap(bf1.origin, bf1.shell, bf1.exps[i], bf2.origin, bf2.shell, bf2.exps[j]);
+      total += val;
     }
   }
   return total;

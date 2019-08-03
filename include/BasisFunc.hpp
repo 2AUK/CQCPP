@@ -24,3 +24,5 @@ public:
   BasisFunction(std::array<int, 3>, Eigen::ArrayXd, Eigen::ArrayXd, Eigen::ArrayXd);
   void normalize();
 };
+
+std::ostream& operator<< (std::ostream&, const BasisFunction&);
