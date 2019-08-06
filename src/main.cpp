@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -9,8 +10,8 @@
 
 int main(){
   Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "[", "]");
-  std::string input_file = "/home/abdullah/Code/C++/SCF/examples/h20.dat";
-  std::string input_basis = "/home/abdullah/Code/C++/SCF/basis_sets/631g.dat";
+  std::string input_file = "../examples/h20.dat";
+  std::string input_basis = "../basis_sets/DZP.dat";
   Molecule water(input_file, input_basis);
   // std::cout << water.molecule_name << '\n';
   // for (const auto atom: water.atoms){
